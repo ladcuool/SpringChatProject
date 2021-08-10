@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.project.springboot.dao.IboardDao">
+	
+	<insert id="upload" parameterType="java.util.HashMap">
+		insert into userboard(bId, bName, bTitle, bContent, bIndent, bfileName) values(userboard_seq.nextval, #{item1}, #{item2}, #{item3}, 0, #{item4})
+	</insert>
+	
+	<select id="articlePage" resultType="_int">
+		select count(*) as total from userboard
+	</select>
+	
+	<select id="list" resultType="com.project.springboot.dto.BDto">
+		select *from (select rownum num, A.* from( select *from userboard order by bId desc) A where rownum &lt;= #{param1}) B where B.num &gt;= #{param2}
+	</select>
+	
+	<select id="contentView" resultType="com.project.springboot.dto.BDto">
+		select *from userboard where bId=#{param1}
+	</select>
+	
+	<select id="replyView" resultType="com.project.springboot.dto.replyDto">
+		select *from reply where bId=#{param1} and replyStep=1 order by replyGroup desc
+	</select>
+	
+	<select id="filename" resultType="string">
+		select bfileName from userboard where bId=#{param1}
+	</select>
+	
+	<update id="modify" parameterType="java.util.HashMap">
+		update userboard set bTitle=#{item1}, bContent=#{item2}, bfileName=#{item3} where bId=TO_NUMBER(#{item4})
+	</update>
+	
+	<delete id="delete" parameterType="_int">
+		delete from userboard where bId=#{param1}
+	</delete>
+	
+	<insert id="reply">
+		insert into reply(bId, replyId, replyContent, replyGroup, replyStep) values(#{param1},#{param2},#{param3}, #{param4}, #{param5})
+	</insert>
+	
+	<select id="maxStep" resultType="string">
+		select TO_CHAR(max(replyStep)) from reply where bId=#{param1} and replyGroup=#{param2}
+	</select>
+	
+	<select id="maxGroup" resultType="string">
+		select TO_CHAR(max(replyGroup)) from reply where bId=#{param1}
+	</select>
+	
+	<select id="steplist" resultType="com.project.springboot.dto.replyDto">
+		select *from reply where bId=#{param1} and replyGroup=#{param2} order by replyStep
+	</select>
+	
+	<update id="reply_revise">
+		update reply set replyContent=#{param2} where bId=#{param1} and replyGroup=#{param3} and replyStep=1
+	</update>
+	
+	<delete id="reply_delete">
+		delete from reply where bId=#{param1} and replyGroup=#{param2}
+	</delete>
+	
+	<update id="reply_reply_revise">
+		update reply set replyContent=#{param1} where bId=#{param2} and replyGroup=#{param3} and replyStep=#{param4}
+	</update>
+	
+	<delete id="reply_reply_delete">
+		delete from reply where bId=#{param1} and replyGroup=#{param2} and replyStep=#{param3}
+	</delete>
+		
+	<select id="SearchPageForTitle" resultType="_int">
+		select count(*) as total from userboard where bTitle like #{param1}
+	</select>
+	
+	<select id="SearchlistForTitle" resultType="com.project.springboot.dto.BDto">
+		select *from(select rownum num, A.*from(select *from userboard order by bId desc) A where bTitle like #{param1} and rownum &lt;=#{param2}) B where B.num &gt;=#{param3}
+	</select>
+	
+	<select id="SearchPageForContent" resultType="_int">
+		select count(*) as total from userboard where bContent like #{param1}
+	</select>
+	
+	<select id="SearchlistForContent" resultType="com.project.springboot.dto.BDto">
+		select *from(select rownum num, A.*from(select *from userboard order by bId desc) A where bContent like #{param1} and rownum &lt;=#{param2}) B where B.num &gt;=#{param3}
+	</select>
+	
+	<select id="SearchPageForWriter" resultType="_int">
+		select count(*) as total from userboard where bName like #{param1}
+	</select>
+	
+	<select id="SearchlistForWriter" resultType="com.project.springboot.dto.BDto">
+		select *from(select rownum num, A.*from(select *from userboard order by bId desc) A where bName like #{param1} and rownum &lt;=#{param2}) B where B.num &gt;=#{param3}
+	</select>
+	
+	<insert id="upload2" parameterType="java.util.HashMap">
+		insert into managerboard(bId, bTitle, bContent, bIndent, bfileName) values(managerboard_seq.nextval, #{item1}, #{item2}, 0, #{item3})
+	</insert>
+	
+	<select id="articlePage2" resultType="_int">
+		select count(*) as total from managerboard
+	</select>
+	
+	<select id="list2" resultType="com.project.springboot.dto.BDto">
+		select *from (select rownum num, A.* from( select *from managerboard order by bId desc) A where rownum &lt;= #{param1}) B where B.num &gt;= #{param2}
+	</select>
+	
+	<select id="contentView2" resultType="com.project.springboot.dto.BDto">
+		select *from managerboard where bId=#{param1}
+	</select>
+
+	<select id="manager_filename" resultType="string">
+		select bfileName from managerboard where bId=#{param1}
+	</select>
+	
+	<update id="manager_modify" parameterType="java.util.HashMap">
+		update managerboard set bTitle=#{item1}, bContent=#{item2}, bfileName=#{item3} where bId=TO_NUMBER(#{item4})
+	</update>
+	
+	<delete id="manager_delete" parameterType="_int">
+		delete from managerboard where bId=#{param1}
+	</delete>
+	
+	<select id="SearchPageForTitle2" resultType="_int">
+		select count(*) as total from managerboard where bTitle like #{param1}
+	</select>
+	
+	<select id="SearchlistForTitle2" resultType="com.project.springboot.dto.BDto">
+		select *from(select rownum num, A.*from(select *from managerboard order by bId desc) A where bTitle like #{param1} and rownum &lt;=#{param2}) B where B.num &gt;=#{param3}
+	</select>
+	
+	<select id="SearchPageForContent2" resultType="_int">
+		select count(*) as total from managerboard where bContent like #{param1}
+	</select>
+	
+	<select id="SearchlistForContent2" resultType="com.project.springboot.dto.BDto">
+		select *from(select rownum num, A.*from(select *from managerboard order by bId desc) A where bContent like #{param1} and rownum &lt;=#{param2}) B where B.num &gt;=#{param3}
+	</select>
+</mapper>

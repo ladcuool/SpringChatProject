@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.project.springboot.dao.IuserDao">
+	
+	<select id="userCheckDao" resultType="_int">
+		select count(*) from userInfo where userID=#{0}
+	</select>
+	
+	<select id="member_check" resultType="String">
+		select member_number from memberInfo where member_number=#{0}
+	</select>
+	
+	<insert id="registerDao" parameterType="java.util.HashMap">
+		insert into userInfo(userID, userPassword, userName, userGender, userAge, userAddress, userEmail) values(#{item1}, #{item2}, #{item3}, #{item4}, #{item5}, #{item6}, #{item7})
+	</insert>
+	
+	<select id="userDao" resultType="com.project.springboot.dto.userDto">
+		select *from userInfo where userID=#{0}
+	</select>
+	
+	<update id="update" parameterType="java.util.HashMap">
+		update userInfo set userPassword=#{item2}, userAddress=#{item3}, userEmail=#{item4}, userProfile=#{item5} where userID=#{item1}
+	</update>
+	
+	<select id="getuserProfile" resultType="String">
+		select userProfile from userInfo where userID=#{param1}
+	</select>
+	
+	<delete id="delete">
+		delete from userInfo where userID=#{0}
+	</delete>
+	
+	<insert id="member_registerDao" parameterType="java.util.HashMap">
+		insert into userInfo(userID, userPassword, userName, userGender, userAge, userAddress, userEmail, Authority) values(#{item1}, #{item2}, #{item3}, #{item4}, #{item5}, #{item6}, #{item7}, 'ROLE_MEMBER')
+	</insert>
+</mapper>

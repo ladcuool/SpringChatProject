@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.project.springboot.dao.IuserchatDao">
+	
+	<select id="memberList" resultType="com.project.springboot.dto.userDto">
+		select *from userInfo
+	</select>
+	
+	<insert id="makeRoom">
+		insert into chatRoom(roomNumber, userID) values(#{param1}, #{param2})
+	</insert>
+	
+	<insert id="chating">
+		insert into chating(roomNumber, userID, msg, nowTime) values(#{param1}, #{param2}, #{param3}, #{param4})
+	</insert>
+	
+	<select id="roomList" resultType="com.project.springboot.dto.chatRoom">
+		select *from chatRoom where userID like '%'||#{param1}||'%'
+	</select>
+	
+	<select id="recentChat" resultType="com.project.springboot.dto.chatingDto">
+		select *from chating where roomNumber=#{param1} and nowTime in(select max(nowTime) as nowTime from chating group by roomNumber)
+	</select>
+	
+	<select id="chatlist" resultType="com.project.springboot.dto.chatingDto">
+		select *from chating where roomNumber=#{param1} order by nowTime desc
+	</select>
+	
+	<select id="RoomNumber" resultType="String">
+		select roomNumber from chatRoom where userID=#{param1} or userID=#{param2}
+	</select>
+	
+	<select id="unread" resultType="_int">
+		select count(*) from chating where roomNumber=#{param1} and userID!=#{param2} and read=1
+	</select>
+	
+	<update id="read">
+		update chating set read=0 where roomNumber=#{param1} and userID!=#{param2}
+	</update>
+	
+	<update id="fullread">
+		update chating set read=0 where roomNumber=#{param1}
+	</update>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.project.springboot.dao.ImanagerDao">
+	<select id="articlePage" resultType="_int">
+		select count(*) as total from userInfo
+	</select>
+	
+	<select id="list" resultType="com.project.springboot.dto.userDto">
+		select *from (select rownum num, A.* from( select *from userInfo order by userID desc) A where rownum &lt;= #{param1}) B where B.num &gt;= #{param2}
+	</select>
+	
+	<select id="userDao" resultType="com.project.springboot.dto.userDto">
+		select *from userInfo where userID=#{0}
+	</select>
+	
+	<delete id="manager_delete" parameterType="String">
+		delete from userInfo where userID=#{param1}
+	</delete>
+	
+	<select id="SearchPageForId" resultType="_int">
+		select count(*) as total from userInfo where userID like #{param1}
+	</select>
+	
+	<select id="SearchlistForId" resultType="com.project.springboot.dto.userDto">
+		select *from(select rownum num, A.*from(select *from userInfo order by userID desc) A where userID like #{param1} and rownum &lt;=#{param2}) B where B.num &gt;=#{param3}
+	</select>
+	
+	<select id="SearchPageForName" resultType="_int">
+		select count(*) as total from userInfo where userName like #{param1}
+	</select>
+	
+	<select id="SearchlistForName" resultType="com.project.springboot.dto.userDto">
+		select *from(select rownum num, A.*from(select *from userInfo order by userID desc) A where userName like #{param1} and rownum &lt;=#{param2}) B where B.num &gt;=#{param3}
+	</select>
+</mapper>
